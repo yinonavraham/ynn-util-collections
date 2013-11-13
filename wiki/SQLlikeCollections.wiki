@@ -1,0 +1,64 @@
+#summary Information and examples for the SQL "like" collections API
+#labels Featured,Java,SQL
+
+= SQL "like" Collections API =
+
+The SQL "like" collections API is intended to give the ability to query and manipulate Java collections in a similar syntax as in SQL. Instead of defining an SQL like language and parse it, the solution here is to define a fluent API using interfaces and static utility methods. This API uses generics and is inspired by the {{{java.util}}} *Collections API*.
+
+== Simple Query Examples ==
+
+All the examples bellow assume the following static imports:
+{{{
+import static ynn.util.collections.Predicates.*;
+import static ynn.util.collections.SqlLikeCollections.*;
+}}}
+
+=== Where Clause ===
+
+{{{
+Collection<String> data = ...;
+Collection<String> result = selectFrom(data).where(not(isNull()));
+}}}
+
+In the example above we define a collection with String data. Then we query the collection for all elements in the collection which are not null. The original {{{data}}} collection is not modified - the selection is done on a copy of the collection.
+Note- due to type inference issues in the example above there is a warning on the {{{isNull()}}} method. In order to avoid this warning you can use the following instead:
+{{{
+Collection<String> result = selectFrom(data).where(not(isNull(String.class)));
+}}}
+
+The API has implementation for simple String predicates. The following example shows a more complex WHERE clause:
+{{{
+import static ynn.util.collections.Predicates.StringPredicates.*;
+
+...
+
+result = selectFrom(data)
+         .where(
+               and(
+                  not(isNull(String.class)),
+                  stringStartsWith("A"),
+                  stringContains("a")
+               )
+         );
+}}}
+
+In the example above the {{{result}}} collection contains all the elements from the {{{data}}} collection which are not null, and start with "A", and contain "a".
+
+=== Order By Clause ===
+
+It is also possible to order the collection as part of the query. This is done using a {{{Comparator}}} (similar to the Collections API).
+
+{{{
+Comparator<String> lexicographicOrder = new Comparator<String>() {
+   @Override
+   public int compare(String e1, String e2) {
+      return e1.compareTo(e2);
+   }
+};
+
+result = selectFrom(data)
+         .where(not(emptyString()))
+         .orderBy(lexicographicOrder);
+}}}
+
+In the example above we select all non-empty strings and order them according to their lexicographic order.
