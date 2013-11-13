@@ -1,5 +1,5 @@
 #summary Main page for the ynn.util.collections project
-#labels home
+#labels Java,Featured,Graph,SQL,Collection
 
 =ynn.util.collections=
 
