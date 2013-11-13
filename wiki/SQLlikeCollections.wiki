@@ -1,5 +1,5 @@
 #summary Information and examples for the SQL "like" collections API
-#labels Featured,Java,SQL
+#labels Featured,Java,SQL,Collection
 
 = SQL "like" Collections API =
 
