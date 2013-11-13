@@ -1,4 +1,6 @@
+#summary Main page for the {{{ynn.util.collections}}} project
 #labels home
+
 =ynn.util.collections=
 
 The {{{ynn.util.collections}}} project contains utilities to enhance {{{java.util}}} collections API. This project contains the sub-projects listed below.
