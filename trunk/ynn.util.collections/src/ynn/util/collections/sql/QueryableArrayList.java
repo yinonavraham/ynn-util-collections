@@ -31,8 +31,8 @@ class QueryableArrayList<E> extends ArrayList<E> implements QueryableList<E> {
 	}
 
 	@Override
-	public QueryableCollection<E> where(Filter<E> filter) {
-		Util.applyFilter(this, filter);
+	public QueryableCollection<E> where(Predicate<E> predicate) {
+		Util.removeUnsatisfyingElements(this, predicate);
 		return this;
 	}
 

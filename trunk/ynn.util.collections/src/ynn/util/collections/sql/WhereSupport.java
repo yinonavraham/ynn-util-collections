@@ -5,11 +5,11 @@ import java.util.Collection;
 interface WhereSupport<E, C extends Collection<E>> {
 	
 	/**
-	 * Filters out from the collection all elements which are not accepted by the given filter. 
+	 * Removes from the collection all elements which do not satisfy the given predicate. 
 	 * This method modifies this collection. 
-	 * @param filter
+	 * @param predicate
 	 * @return This collection.
 	 */
-	C where(Filter<E> filter);
+	C where(Predicate<E> predicate);
 
 }

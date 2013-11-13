@@ -29,8 +29,8 @@ class UpdatableArrayList<E> extends ArrayList<E> implements UpdatableCollection<
 	}
 
 	@Override
-	public UpdatableCollection<E> where(Filter<E> filter) {
-		Util.applyFilter(this, filter);
+	public UpdatableCollection<E> where(Predicate<E> predicate) {
+		Util.removeUnsatisfyingElements(this, predicate);
 		return this;
 	}
 
