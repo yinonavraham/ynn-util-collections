@@ -6,7 +6,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import ynn.util.collections.sql.Filter;
+import ynn.util.collections.sql.Predicate;
 import ynn.util.collections.sql.SqlLikeCollections;
 import ynn.util.collections.sql.Updater;
 
@@ -77,10 +77,10 @@ public class UpdatableArrayListTest {
 		};
 	}
 	
-	private Filter<ElementMock> elementValueIs(final String value) {
-		return new Filter<ElementMock>() {
+	private Predicate<ElementMock> elementValueIs(final String value) {
+		return new Predicate<ElementMock>() {
 			@Override
-			public boolean accept(ElementMock element) {
+			public boolean satisfiedBy(ElementMock element) {
 				if (value == null) return element.value == null;
 				return value.equals(element.value);
 			}
