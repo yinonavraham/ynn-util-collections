@@ -7,11 +7,16 @@ final class Util {
 	
 	private Util() { }
 	
-	public static <E> void applyFilter(Collection<E> collection, Filter<E> filter) {
+	/**
+	 * Remove from the given collection elements which do not satisfy the given predicate 
+	 * @param collection - the collection to remove elements from
+	 * @param predicate the predicate to use
+	 */
+	public static <E> void removeUnsatisfyingElements(Collection<E> collection, Predicate<E> predicate) {
 		Iterator<E> iterator = collection.iterator();
 		while (iterator.hasNext()) {
 			E element = iterator.next();
-			if (!filter.accept(element)) {
+			if (!predicate.satisfiedBy(element)) {
 				iterator.remove();
 			}
 		}
