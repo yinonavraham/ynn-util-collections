@@ -1,20 +1,20 @@
 package ynn.util.collections.sql.test;
 
 import static org.junit.Assert.assertArrayEquals;
-import static ynn.util.collections.sql.Filters.alwaysFalse;
-import static ynn.util.collections.sql.Filters.alwaysTrue;
-import static ynn.util.collections.sql.Filters.and;
-import static ynn.util.collections.sql.Filters.isNull;
-import static ynn.util.collections.sql.Filters.not;
-import static ynn.util.collections.sql.Filters.or;
-import static ynn.util.collections.sql.Filters.StringFilters.emptyString;
-import static ynn.util.collections.sql.Filters.StringFilters.stringContains;
-import static ynn.util.collections.sql.Filters.StringFilters.stringEndsWith;
-import static ynn.util.collections.sql.Filters.StringFilters.stringEquals;
-import static ynn.util.collections.sql.Filters.StringFilters.stringFollows;
-import static ynn.util.collections.sql.Filters.StringFilters.stringMatches;
-import static ynn.util.collections.sql.Filters.StringFilters.stringPrecedes;
-import static ynn.util.collections.sql.Filters.StringFilters.stringStartsWith;
+import static ynn.util.collections.sql.Predicates.alwaysFalse;
+import static ynn.util.collections.sql.Predicates.alwaysTrue;
+import static ynn.util.collections.sql.Predicates.and;
+import static ynn.util.collections.sql.Predicates.isNull;
+import static ynn.util.collections.sql.Predicates.not;
+import static ynn.util.collections.sql.Predicates.or;
+import static ynn.util.collections.sql.Predicates.StringPredicates.emptyString;
+import static ynn.util.collections.sql.Predicates.StringPredicates.stringContains;
+import static ynn.util.collections.sql.Predicates.StringPredicates.stringEndsWith;
+import static ynn.util.collections.sql.Predicates.StringPredicates.stringEquals;
+import static ynn.util.collections.sql.Predicates.StringPredicates.stringFollows;
+import static ynn.util.collections.sql.Predicates.StringPredicates.stringMatches;
+import static ynn.util.collections.sql.Predicates.StringPredicates.stringPrecedes;
+import static ynn.util.collections.sql.Predicates.StringPredicates.stringStartsWith;
 import static ynn.util.collections.sql.SqlLikeCollections.selectFrom;
 
 import java.util.Arrays;
