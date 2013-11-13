@@ -1,4 +1,4 @@
-#summary Main page for the {{{ynn.util.collections}}} project
+#summary Main page for the ynn.util.collections project
 #labels home
 
 =ynn.util.collections=
