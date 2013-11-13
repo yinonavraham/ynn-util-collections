@@ -1,7 +1,10 @@
 #labels home
-The {{{ynn.util.collections}}} project contains utilities to enhance {{{java.util}}} collections API.
-This project contains the following sub-projects:
-  * Graph Collections - 
+=ynn.util.collections=
+
+The {{{ynn.util.collections}}} project contains utilities to enhance {{{java.util}}} collections API. This project contains the sub-projects listed below.
+
+==Graph Collections==
 Generic graph API for representing and manipulating graphs (of vertices and edges). The implementation supports both general graphs and directed graphs, but it can be extended and customized.
-  * SQL "like" Collections -
+
+==SQL "like" Collections==
 Collections which enable "SQL like" CRUD operations. In oppose to other similar solutions which uses parsing of strings with "SQL" statements, this framework is part of the java code - no parsing is done, no reflection is used. This enables design-time protection, no need to fail during runtime for the first time due to syntax error...
