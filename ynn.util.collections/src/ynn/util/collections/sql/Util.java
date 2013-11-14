@@ -30,9 +30,12 @@ final class Util {
 	 * @return A new {@link Predicate} which works on an element and checks a specific argument value of it, by delegating to the given predicate. 
 	 */
 	public static <E, V> Predicate<E> adaptValuePredicate(final Predicate<V> predicate, final ElementValueProvider<E, V> valueProvider) {
+		if (predicate == null) throw new IllegalArgumentException("predicate cannot be null");
+		if (valueProvider == null) throw new IllegalArgumentException("valueProvider cannot be null");
 		return new Predicate<E>() {
 			@Override
 			public boolean satisfiedBy(E element) {
+				if (element == null) return false;
 				V value = valueProvider.getValue(element);
 				return predicate.satisfiedBy(value);
 			}
