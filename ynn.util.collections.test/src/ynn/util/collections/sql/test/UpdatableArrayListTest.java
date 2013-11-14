@@ -1,109 +1,71 @@
 package ynn.util.collections.sql.test;
 
+import static ynn.util.collections.sql.Predicates.isNull;
+
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import ynn.util.collections.sql.Predicate;
 import ynn.util.collections.sql.SqlLikeCollections;
-import ynn.util.collections.sql.Updater;
+import ynn.util.collections.sql.test.mock.PersonMock;
 
 public class UpdatableArrayListTest {
 
 	@Test
 	public void testUpdateAll() {
-		List<ElementMock> original = Arrays.asList(
-				new ElementMock("A"),
-				new ElementMock("B"),
-				new ElementMock("C"),
-				new ElementMock("D"),
-				new ElementMock("E"),
-				new ElementMock("F"),
-				new ElementMock("G"));
-		List<ElementMock> expected = Arrays.asList(
-				new ElementMock("X"),
-				new ElementMock("X"),
-				new ElementMock("X"),
-				new ElementMock("X"),
-				new ElementMock("X"),
-				new ElementMock("X"),
-				new ElementMock("X"));
-		SqlLikeCollections.update(original).set(elementValueTo("X"));
+		List<PersonMock> original = Arrays.asList(
+				new PersonMock("A", 1, 1.1),
+				new PersonMock("B", 2, 2.2),
+				new PersonMock("C", 3, 3.3),
+				new PersonMock("D", 4, 4.4),
+				new PersonMock("E", 5, 5.5),
+				new PersonMock("F", 6, 6.6),
+				new PersonMock("G", 7, 7.7));
+		List<PersonMock> expected = Arrays.asList(
+				new PersonMock("X", 1, 1.1),
+				new PersonMock("X", 2, 2.2),
+				new PersonMock("X", 3, 3.3),
+				new PersonMock("X", 4, 4.4),
+				new PersonMock("X", 5, 5.5),
+				new PersonMock("X", 6, 6.6),
+				new PersonMock("X", 7, 7.7));
+		SqlLikeCollections.update(original).set(PersonMock.nameTo("X"));
 		Assert.assertArrayEquals("Updated array is not ass expected", expected.toArray(), original.toArray());
 	}
 
 	@Test
 	public void testUpdateWhereNull() {
-		List<ElementMock> original = Arrays.asList(
-				new ElementMock(null),
-				new ElementMock("A"),
-				new ElementMock("B"),
-				new ElementMock("C"),
-				new ElementMock(null),
-				new ElementMock(null),
-				new ElementMock("D"),
-				new ElementMock("E"),
-				new ElementMock("F"),
-				new ElementMock("G"),
-				new ElementMock(null));
-		List<ElementMock> expected = Arrays.asList(
-				new ElementMock("X"),
-				new ElementMock("A"),
-				new ElementMock("B"),
-				new ElementMock("C"),
-				new ElementMock("X"),
-				new ElementMock("X"),
-				new ElementMock("D"),
-				new ElementMock("E"),
-				new ElementMock("F"),
-				new ElementMock("G"),
-				new ElementMock("X"));
-		SqlLikeCollections.update(original).where(elementValueIs(null)).set(elementValueTo("X"));
+		List<PersonMock> original = Arrays.asList(
+				new PersonMock(null, -1, -1),
+				new PersonMock("A", 1, 1.1),
+				new PersonMock("B", 2, 2.2),
+				new PersonMock("C", 3, 3.3),
+				new PersonMock(null, -1, -1),
+				new PersonMock(null, -1, -1),
+				new PersonMock("D", 4, 4.4),
+				new PersonMock("E", 5, 5.5),
+				new PersonMock("F", 6, 6.6),
+				new PersonMock("G", 7, 7.7),
+				new PersonMock(null, -1, -1));
+		List<PersonMock> expected = Arrays.asList(
+				new PersonMock("X", 0, -1),
+				new PersonMock("A", 1, 1.1),
+				new PersonMock("B", 2, 2.2),
+				new PersonMock("C", 3, 3.3),
+				new PersonMock("X", 0, -1),
+				new PersonMock("X", 0, -1),
+				new PersonMock("D", 4, 4.4),
+				new PersonMock("E", 5, 5.5),
+				new PersonMock("F", 6, 6.6),
+				new PersonMock("G", 7, 7.7),
+				new PersonMock("X", 0, -1));
+		SqlLikeCollections.update(original)
+							.where(isNull(PersonMock.name()))
+							.set(PersonMock.nameTo("X"), 
+								 PersonMock.ageTo(0));
 		Assert.assertArrayEquals("Updated array is not ass expected", expected.toArray(), original.toArray());
-	}
-	
-	/*
-	 * Helpers
-	 */
-	
-	private Updater<ElementMock> elementValueTo(final String value) {
-		return new Updater<ElementMock>() {
-			@Override
-			public void update(ElementMock element) {
-				element.value = value;
-			}
-		};
-	}
-	
-	private Predicate<ElementMock> elementValueIs(final String value) {
-		return new Predicate<ElementMock>() {
-			@Override
-			public boolean satisfiedBy(ElementMock element) {
-				if (value == null) return element.value == null;
-				return value.equals(element.value);
-			}
-		};
-	}
-	
-	private class ElementMock {
-
-		String value;
-		
-		public ElementMock(String value) {
-			this.value = value;
-		}
-		
-		@Override
-		public boolean equals(Object obj) {
-			return value.equals(((ElementMock)obj).value);
-		}
-		
-		@Override
-		public String toString() {
-			return String.valueOf(value);
-		}
 	}
 
 }
