@@ -1,10 +1,14 @@
 package ynn.util.collections.sql.test;
 
 import static org.junit.Assert.assertArrayEquals;
+import static ynn.util.collections.sql.OrderByUtil.asc;
+import static ynn.util.collections.sql.OrderByUtil.desc;
 import static ynn.util.collections.sql.Predicates.alwaysFalse;
 import static ynn.util.collections.sql.Predicates.alwaysTrue;
 import static ynn.util.collections.sql.Predicates.and;
+import static ynn.util.collections.sql.Predicates.in;
 import static ynn.util.collections.sql.Predicates.isNull;
+import static ynn.util.collections.sql.Predicates.lessThanOrEquals;
 import static ynn.util.collections.sql.Predicates.not;
 import static ynn.util.collections.sql.Predicates.or;
 import static ynn.util.collections.sql.Predicates.StringPredicates.emptyString;
@@ -25,10 +29,11 @@ import java.util.List;
 import org.junit.Test;
 
 import ynn.util.collections.sql.QueryableCollection;
+import ynn.util.collections.sql.test.mock.PersonMock;
 
 public class QueryableArrayListTest {
 	
-	private static final Comparator<String> COMPARATOR_LEXI = new Comparator<String>() {
+	private static final Comparator<String> LEXICOGRAPHIC_ORDER = new Comparator<String>() {
 		@Override
 		public int compare(String e1, String e2) {
 			return e1.compareTo(e2);
@@ -105,6 +110,38 @@ public class QueryableArrayListTest {
 					);
 		assertArrayEquals("Result list is not as expected", expected.toArray(), result.toArray());
 	}
+
+	@Test
+	public void testWhereIn() {
+		List<String> original = Arrays.asList(
+				"", "A", "B", "C", null, "D", "", "E", "F", "G", "", "H", "I", null
+				);
+		List<String> expected = Arrays.asList(
+				"A", "B", "C", "D", "E", "F", "G", "H", "I"
+				);
+		QueryableCollection<String> result = 
+				selectFrom(original)
+				.where(in(expected));
+		assertArrayEquals("Result list is not as expected", expected.toArray(), result.toArray());
+	}
+
+	@Test
+	public void testWhereInWithNull() {
+		List<String> original = Arrays.asList(
+				"", "A", "B", "C", null, "D", "", "E", "F", "G", "", "H", "I", null
+				);
+		List<String> expected = Arrays.asList(
+				"A", "B", "C", null, "D", "E", "F", "G", "H", "I", null
+				);
+		QueryableCollection<String> result = 
+				selectFrom(original)
+				.where(in(null, "A", "B", "C", "D", "E", "F", "G", "H", "I"));
+		assertArrayEquals("Result list is not as expected", expected.toArray(), result.toArray());
+	}
+	
+	/*
+	 * STRING PREDICATES
+	 */
 
 	@Test
 	public void testWhereStringEquals() {
@@ -218,8 +255,118 @@ public class QueryableArrayListTest {
 		List<String> result = 
 				selectFrom(original)
 				.where(not(isNull(String.class)))
-				.orderBy(COMPARATOR_LEXI);
+				.orderBy(LEXICOGRAPHIC_ORDER);
+		assertArrayEquals("Result list is not as expected", expected.toArray(), result.toArray());
+	}
+	
+	/*
+	 * COMPLEX ELEMENTS - PERSON
+	 */
+
+	@Test
+	public void testWherePersonMockAttributes() {
+		List<PersonMock> original = Arrays.asList(
+				new PersonMock("name1", 1, 1.1),
+				new PersonMock("name2", 2, 2.2),
+				new PersonMock( null, 	-1, -1),
+				new PersonMock("name3", 3, 3.3),
+				new PersonMock("", 	 0, 0),
+				new PersonMock("name4", 4, 4.4)
+				);
+		List<PersonMock> expected = Arrays.asList(
+				new PersonMock("name1", 1, 1.1),
+				new PersonMock("name3", 3, 3.3),
+				new PersonMock("name4", 4, 4.4)
+				);
+		Collection<PersonMock> result = 
+				selectFrom(original)
+				.where(
+						and(
+							not(isNull(PersonMock.name())),
+							not(in(PersonMock.age(), Arrays.asList(0, 2)))
+						)
+					);
 		assertArrayEquals("Result list is not as expected", expected.toArray(), result.toArray());
 	}
 
+	@Test
+	public void testWherePersonMockStringAttributes() {
+		List<PersonMock> original = Arrays.asList(
+				new PersonMock("name1", 1, 1.1),
+				new PersonMock("name2", 2, 2.2),
+				new PersonMock( null, 	-1, -1),
+				new PersonMock("name3", 3, 3.3),
+				new PersonMock("", 	 0, 0),
+				new PersonMock("name4", 4, 4.4)
+				);
+		List<PersonMock> expected = Arrays.asList(
+				new PersonMock("name2", 2, 2.2),
+				new PersonMock( null, 	-1, -1),
+				new PersonMock("", 	 0, 0)
+				);
+		Collection<PersonMock> result = 
+				selectFrom(original)
+				.where(
+						or(
+							isNull(PersonMock.name()),
+							stringEndsWith(PersonMock.name(), "2"),
+							lessThanOrEquals(PersonMock.age(), 0)
+						)
+					);
+		assertArrayEquals("Result list is not as expected", expected.toArray(), result.toArray());
+	}
+
+	@Test
+	public void testWherePersonMockNameNotNullOrEmptyOrderByName() {
+		List<PersonMock> original = Arrays.asList(
+				new PersonMock("name2", 2, 2.2),
+				new PersonMock("name1", 1, 1.1),
+				new PersonMock( null, 	-1, -1),
+				new PersonMock("name4", 4, 4.4),
+				new PersonMock("", 	 0, 0),
+				new PersonMock("name3", 3, 3.3)
+				);
+		List<PersonMock> expected = Arrays.asList(
+				new PersonMock("name1", 1, 1.1),
+				new PersonMock("name2", 2, 2.2),
+				new PersonMock("name3", 3, 3.3),
+				new PersonMock("name4", 4, 4.4)
+				);
+		Collection<PersonMock> result = 
+				selectFrom(original)
+				.where(
+						and(
+							not(isNull(PersonMock.name())),
+							not(emptyString(PersonMock.name()))
+						)
+					)
+				.orderBy(PersonMock.name());
+		assertArrayEquals("Result list is not as expected", expected.toArray(), result.toArray());
+	}
+
+	@Test
+	public void testPersonMockOrderByAgeDescNameAsc() {
+		List<PersonMock> original = Arrays.asList(
+				new PersonMock("name2", 2, 2.2),
+				new PersonMock("name1", 1, 1.1),
+				new PersonMock("name4", 4, 4.4),
+				new PersonMock("name3", 1, 3.3),
+				new PersonMock("name5", 2, 5.5),
+				new PersonMock("name6", 3, 6.6)
+				);
+		List<PersonMock> expected = Arrays.asList(
+				new PersonMock("name4", 4, 4.4),
+				new PersonMock("name6", 3, 6.6),
+				new PersonMock("name2", 2, 2.2),
+				new PersonMock("name5", 2, 5.5),
+				new PersonMock("name1", 1, 1.1),
+				new PersonMock("name3", 1, 3.3)
+				);
+		Collection<PersonMock> result = 
+				selectFrom(original)
+				.orderBy(desc(PersonMock.age()), 
+						 asc(PersonMock.name()));
+		assertArrayEquals("Result list is not as expected", expected.toArray(), result.toArray());
+	}
+	
 }
