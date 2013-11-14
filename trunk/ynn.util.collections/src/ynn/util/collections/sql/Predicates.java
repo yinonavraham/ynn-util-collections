@@ -95,6 +95,7 @@ public final class Predicates {
 	}
 	
 	public static <E> Predicate<E> isNull(Class<E> elementClass) {
+		if (elementClass == null) throw new IllegalArgumentException("elementClass cannot be null");
 		return isNull();
 	}
 	
@@ -151,6 +152,16 @@ public final class Predicates {
 	
 	public static <E, V extends Comparable<V>> Predicate<E> greaterThanOrEquals(ElementValueProvider<E, V> valueProvider, V value) {
 		return adaptValuePredicate(greaterThanOrEquals(value), valueProvider);
+	}
+	
+	// BETWEEN
+	
+	public static <E extends Comparable<E>> Predicate<E> between(E startElement, E endElement) {
+		return new BetweenPredicate<E>(startElement, endElement);
+	}
+	
+	public static <E, V extends Comparable<V>> Predicate<E> between(ElementValueProvider<E, V> valueProvider, V startValue, V endValue) {
+		return adaptValuePredicate(between(startValue, endValue), valueProvider);
 	}
 	
 	/*
@@ -210,6 +221,7 @@ public final class Predicates {
 	}
 	
 	public static <E> Predicate<E> alwaysTrue(Class<E> elementClass) {
+		if (elementClass == null) throw new IllegalArgumentException("elementClass cannot be null");
 		return alwaysTrue();
 	}
 	
@@ -227,6 +239,7 @@ public final class Predicates {
 	}
 	
 	public static <E> Predicate<E> alwaysFalse(Class<E> elementClass) {
+		if (elementClass == null) throw new IllegalArgumentException("elementClass cannot be null");
 		return alwaysFalse();
 	}
 	
