@@ -137,7 +137,7 @@ public final class Predicates {
 	// GREATER THAN
 	
 	public static <E extends Comparable<E>> Predicate<E> greaterThan(E otherElement) {
-		return new LessThanPredicate<E>(otherElement);
+		return new GreaterThanPredicate<E>(otherElement);
 	}
 	
 	public static <E, V extends Comparable<V>> Predicate<E> greaterThan(ElementValueProvider<E, V> valueProvider, V value) {
@@ -147,7 +147,7 @@ public final class Predicates {
 	// GREATER THAN OR EQUALS
 	
 	public static <E extends Comparable<E>> Predicate<E> greaterThanOrEquals(E otherElement) {
-		return new LessThanOrEqualsPredicate<E>(otherElement);
+		return new GreaterThanOrEqualsPredicate<E>(otherElement);
 	}
 	
 	public static <E, V extends Comparable<V>> Predicate<E> greaterThanOrEquals(ElementValueProvider<E, V> valueProvider, V value) {
