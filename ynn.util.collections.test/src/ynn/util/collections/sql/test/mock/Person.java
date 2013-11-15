@@ -3,15 +3,15 @@ package ynn.util.collections.sql.test.mock;
 import ynn.util.collections.sql.ElementValueProvider;
 import ynn.util.collections.sql.Updater;
 
-public class PersonMock {
+public class Person {
 	
 	private String name;
 	private int age;
 	private double weight;
 	
-	public PersonMock() { }
+	public Person() { }
 	
-	public PersonMock(String name, int age, double weight) { 
+	public Person(String name, int age, double weight) { 
 		this.name = name;
 		this.age = age;
 		this.weight = weight;
@@ -50,7 +50,7 @@ public class PersonMock {
 	public boolean equals(Object obj) {
 		if (obj == null) return false;
 		if (obj.getClass() == this.getClass()) {
-			PersonMock otherElement = (PersonMock) obj;
+			Person otherElement = (Person) obj;
 			// Name
 			if (otherElement.name == null) {
 				if (name != null) return false;
@@ -69,28 +69,28 @@ public class PersonMock {
 	 * VALUE PROVIDERS
 	 */
 	
-	public static ElementValueProvider<PersonMock, String> name() {
-		return new ElementValueProvider<PersonMock, String>() {
+	public static ElementValueProvider<Person, String> name() {
+		return new ElementValueProvider<Person, String>() {
 			@Override
-			public String getValue(PersonMock element) {
+			public String getValue(Person element) {
 				return element.getName();
 			}
 		};
 	}
 	
-	public static ElementValueProvider<PersonMock, Integer> age() {
-		return new ElementValueProvider<PersonMock, Integer>() {
+	public static ElementValueProvider<Person, Integer> age() {
+		return new ElementValueProvider<Person, Integer>() {
 			@Override
-			public Integer getValue(PersonMock element) {
+			public Integer getValue(Person element) {
 				return element.getAge();
 			}
 		};
 	}
 	
-	public static ElementValueProvider<PersonMock, Double> weight() {
-		return new ElementValueProvider<PersonMock, Double>() {
+	public static ElementValueProvider<Person, Double> weight() {
+		return new ElementValueProvider<Person, Double>() {
 			@Override
-			public Double getValue(PersonMock element) {
+			public Double getValue(Person element) {
 				return element.getWeight();
 			}
 		};
@@ -100,28 +100,28 @@ public class PersonMock {
 	 * UPDATERS
 	 */
 	
-	public static Updater<PersonMock> nameTo(final String newName) {
-		return new Updater<PersonMock>() {
+	public static Updater<Person> nameTo(final String newName) {
+		return new Updater<Person>() {
 			@Override
-			public void update(PersonMock element) {
+			public void update(Person element) {
 				element.setName(newName);
 			}
 		};
 	}
 	
-	public static Updater<PersonMock> ageTo(final int newAge) {
-		return new Updater<PersonMock>() {
+	public static Updater<Person> ageTo(final int newAge) {
+		return new Updater<Person>() {
 			@Override
-			public void update(PersonMock element) {
+			public void update(Person element) {
 				element.setAge(newAge);
 			}
 		};
 	}
 	
-	public static Updater<PersonMock> weightTo(final double newWeight) {
-		return new Updater<PersonMock>() {
+	public static Updater<Person> weightTo(final double newWeight) {
+		return new Updater<Person>() {
 			@Override
-			public void update(PersonMock element) {
+			public void update(Person element) {
 				element.setWeight(newWeight);
 			}
 		};
