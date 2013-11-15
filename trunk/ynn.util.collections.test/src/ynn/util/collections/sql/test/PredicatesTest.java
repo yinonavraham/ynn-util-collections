@@ -16,7 +16,7 @@ import org.junit.runners.MethodSorters;
 
 import ynn.util.collections.sql.ElementValueProvider;
 import ynn.util.collections.sql.Predicate;
-import ynn.util.collections.sql.test.mock.PersonMock;
+import ynn.util.collections.sql.test.mock.Person;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PredicatesTest {
@@ -282,14 +282,14 @@ public class PredicatesTest {
 
 	@Test
 	public void testIsNullElementValueProviderOfEV() {
-		PersonMock personA = new PersonMock("A", 0, 0);
-		PersonMock personNull = new PersonMock(null, 0, 0);
-		assertFalse("isNull(personA.name) expected to be false", isNull(PersonMock.name()).satisfiedBy(personA));
-		assertTrue("isNull(personNull.name) expected to be true", isNull(PersonMock.name()).satisfiedBy(personNull));
+		Person personA = new Person("A", 0, 0);
+		Person personNull = new Person(null, 0, 0);
+		assertFalse("isNull(personA.name) expected to be false", isNull(Person.name()).satisfiedBy(personA));
+		assertTrue("isNull(personNull.name) expected to be true", isNull(Person.name()).satisfiedBy(personNull));
 		
-		// Negative: null predicate
+		// Negative: null value provider
 		try {
-			ElementValueProvider<PersonMock, String> valueProvider = null;
+			ElementValueProvider<Person, String> valueProvider = null;
 			isNull(valueProvider);
 			fail("isNull(null): Exception was expected");
 		} catch (Exception e) {
@@ -308,16 +308,16 @@ public class PredicatesTest {
 
 	@Test
 	public void testEqElementValueProviderOfEVV() {
-		PersonMock personA = new PersonMock("A", 0, 0);
-		PersonMock personB = new PersonMock("B", 0, 0);
-		PersonMock personNull = new PersonMock(null, 0, 0);
+		Person personA = new Person("A", 0, 0);
+		Person personB = new Person("B", 0, 0);
+		Person personNull = new Person(null, 0, 0);
 		
-		assertTrue("eq(A,personA) expected to be true", eq(PersonMock.name(), "A").satisfiedBy(personA));
-		assertFalse("eq(A,personB) expected to be false", eq(PersonMock.name(), "A").satisfiedBy(personB));
-		assertFalse("eq(A,personNull) expected to be false", eq(PersonMock.name(), "A").satisfiedBy(personNull));
-		assertFalse("eq(null,personB) expected to be false", eq(PersonMock.name(), null).satisfiedBy(personB));
-		assertTrue("eq(null,personNull) expected to be true", eq(PersonMock.name(), null).satisfiedBy(personNull));
-		assertFalse("eq(null,null) expected to be false", eq(PersonMock.name(), null).satisfiedBy(null));
+		assertTrue("eq(A,personA) expected to be true", eq(Person.name(), "A").satisfiedBy(personA));
+		assertFalse("eq(A,personB) expected to be false", eq(Person.name(), "A").satisfiedBy(personB));
+		assertFalse("eq(A,personNull) expected to be false", eq(Person.name(), "A").satisfiedBy(personNull));
+		assertFalse("eq(null,personB) expected to be false", eq(Person.name(), null).satisfiedBy(personB));
+		assertTrue("eq(null,personNull) expected to be true", eq(Person.name(), null).satisfiedBy(personNull));
+		assertFalse("eq(null,null) expected to be false", eq(Person.name(), null).satisfiedBy(null));
 		
 		// Negative: null value provider
 		try {
@@ -330,62 +330,242 @@ public class PredicatesTest {
 
 	@Test
 	public void testLessThanE() {
-		// TODO Implement testLessThanE()
-		fail("Not yet implemented");
+		assertTrue("1 < 2 expected to be true", lessThan(2).satisfiedBy(1));
+		assertFalse("2 < 1 expected to be false", lessThan(1).satisfiedBy(2));
+		assertFalse("1 < 1 expected to be false", lessThan(1).satisfiedBy(1));
+		assertFalse("null < 1 expected to be false", lessThan(1).satisfiedBy(null));
+		
+		// Negative: null value
+		try {
+			lessThan((Integer)null).satisfiedBy(1);
+			fail("1 < null: Exception was expected");
+		} catch (Exception e) {
+			// OK
+		}
 	}
 
 	@Test
 	public void testLessThanElementValueProviderOfEVV() {
-		// TODO Implement testLessThanElementValueProviderOfEVV()
-		fail("Not yet implemented");
+		Person personA = new Person("A", 0, 0);
+		Person personB = new Person("B", 0, 0);
+		Person personNull = new Person(null, 0, 0);
+		assertTrue("personA < B expected to be true", lessThan(Person.name(), "B").satisfiedBy(personA));
+		assertFalse("personB < A expected to be false", lessThan(Person.name(), "A").satisfiedBy(personB));
+		assertFalse("personA < A expected to be false", lessThan(Person.name(), "A").satisfiedBy(personA));
+		assertFalse("personNull < A expected to be false", lessThan(Person.name(), "A").satisfiedBy(personNull));
+		assertFalse("null < A expected to be true", lessThan(Person.name(), "A").satisfiedBy(null));
+		
+		// Negative: null value
+		try {
+			lessThan(Person.name(), null);
+			fail("lessThan(person.name, null): Exception was expected");
+		} catch (Exception e) {
+			// OK
+		}
+		
+		// Negative: null value provider
+		try {
+			ElementValueProvider<Person, String> valueProvider = null;
+			lessThan(valueProvider, "A");
+			fail("lessThan(null, A): Exception was expected");
+		} catch (Exception e) {
+			// OK
+		}
 	}
 
 	@Test
 	public void testLessThanOrEqualsE() {
-		// TODO Implement testLessThanOrEqualsE()
-		fail("Not yet implemented");
+		assertTrue("1 <= 2 expected to be true", lessThanOrEquals(2).satisfiedBy(1));
+		assertFalse("2 <= 1 expected to be false", lessThanOrEquals(1).satisfiedBy(2));
+		assertTrue("1 <= 1 expected to be true", lessThanOrEquals(1).satisfiedBy(1));
+		assertFalse("null <= 1 expected to be false", lessThanOrEquals(1).satisfiedBy(null));
+		
+		// Negative: null value
+		try {
+			lessThanOrEquals((Integer)null).satisfiedBy(1);
+			fail("1 <= null: Exception was expected");
+		} catch (Exception e) {
+			// OK
+		}
 	}
 
 	@Test
 	public void testLessThanOrEqualsElementValueProviderOfEVV() {
-		// TODO Implement testLessThanOrEqualsElementValueProviderOfEVV()
-		fail("Not yet implemented");
+		Person personA = new Person("A", 0, 0);
+		Person personB = new Person("B", 0, 0);
+		Person personNull = new Person(null, 0, 0);
+		assertTrue("personA <= B expected to be true", lessThanOrEquals(Person.name(), "B").satisfiedBy(personA));
+		assertFalse("personB <= A expected to be false", lessThanOrEquals(Person.name(), "A").satisfiedBy(personB));
+		assertTrue("personA <= A expected to be true", lessThanOrEquals(Person.name(), "A").satisfiedBy(personA));
+		assertFalse("personNull <= A expected to be false", lessThanOrEquals(Person.name(), "A").satisfiedBy(personNull));
+		assertFalse("null <= A expected to be true", lessThanOrEquals(Person.name(), "A").satisfiedBy(null));
+		
+		// Negative: null value
+		try {
+			lessThanOrEquals(Person.name(), null);
+			fail("lessThanOrEquals(person.name, null): Exception was expected");
+		} catch (Exception e) {
+			// OK
+		}
+		
+		// Negative: null value provider
+		try {
+			ElementValueProvider<Person, String> valueProvider = null;
+			lessThanOrEquals(valueProvider, "A");
+			fail("lessThanOrEquals(null, A): Exception was expected");
+		} catch (Exception e) {
+			// OK
+		}
 	}
 
 	@Test
 	public void testGreaterThanE() {
-		// TODO Implement testGreaterThanE()
-		fail("Not yet implemented");
+		assertTrue("2 > 1 expected to be true", greaterThan(1).satisfiedBy(2));
+		assertFalse("1 > 2 expected to be false", greaterThan(2).satisfiedBy(1));
+		assertFalse("1 > 1 expected to be false", greaterThan(1).satisfiedBy(1));
+		assertFalse("null > 1 expected to be false", greaterThan(1).satisfiedBy(null));
+		
+		// Negative: null value
+		try {
+			greaterThan((Integer)null).satisfiedBy(1);
+			fail("1 > null: Exception was expected");
+		} catch (Exception e) {
+			// OK
+		}
 	}
 
 	@Test
 	public void testGreaterThanElementValueProviderOfEVV() {
-		// TODO Implement testGreaterThanElementValueProviderOfEVV()
-		fail("Not yet implemented");
+		Person personA = new Person("A", 0, 0);
+		Person personB = new Person("B", 0, 0);
+		Person personNull = new Person(null, 0, 0);
+		assertFalse("personA > B expected to be false", greaterThan(Person.name(), "B").satisfiedBy(personA));
+		assertTrue("personB > A expected to be true", greaterThan(Person.name(), "A").satisfiedBy(personB));
+		assertFalse("personA > A expected to be false", greaterThan(Person.name(), "A").satisfiedBy(personA));
+		assertFalse("personNull > A expected to be false", greaterThan(Person.name(), "A").satisfiedBy(personNull));
+		assertFalse("null > A expected to be true", greaterThan(Person.name(), "A").satisfiedBy(null));
+		
+		// Negative: null value
+		try {
+			greaterThan(Person.name(), null);
+			fail("greaterThan(person.name, null): Exception was expected");
+		} catch (Exception e) {
+			// OK
+		}
+		
+		// Negative: null value provider
+		try {
+			ElementValueProvider<Person, String> valueProvider = null;
+			greaterThan(valueProvider, "A");
+			fail("greaterThan(null, A): Exception was expected");
+		} catch (Exception e) {
+			// OK
+		}
 	}
 
 	@Test
 	public void testGreaterThanOrEqualsE() {
-		// TODO Implement testGreaterThanOrEqualsE()
-		fail("Not yet implemented");
+		assertTrue("2 >= 1 expected to be true", greaterThanOrEquals(1).satisfiedBy(2));
+		assertFalse("1 >= 2 expected to be false", greaterThanOrEquals(2).satisfiedBy(1));
+		assertTrue("1 >= 1 expected to be true", greaterThanOrEquals(1).satisfiedBy(1));
+		assertFalse("null >= 1 expected to be false", greaterThanOrEquals(1).satisfiedBy(null));
+		
+		// Negative: null value
+		try {
+			greaterThanOrEquals((Integer)null).satisfiedBy(1);
+			fail("1 >= null: Exception was expected");
+		} catch (Exception e) {
+			// OK
+		}
 	}
 
 	@Test
 	public void testGreaterThanOrEqualsElementValueProviderOfEVV() {
-		// TODO Implement testGreaterThanOrEqualsElementValueProviderOfEVV()
-		fail("Not yet implemented");
+		Person personA = new Person("A", 0, 0);
+		Person personB = new Person("B", 0, 0);
+		Person personNull = new Person(null, 0, 0);
+		assertFalse("personA >= B expected to be false", greaterThanOrEquals(Person.name(), "B").satisfiedBy(personA));
+		assertTrue("personB >= A expected to be true", greaterThanOrEquals(Person.name(), "A").satisfiedBy(personB));
+		assertTrue("personA >= A expected to be true", greaterThanOrEquals(Person.name(), "A").satisfiedBy(personA));
+		assertFalse("personNull >= A expected to be false", greaterThanOrEquals(Person.name(), "A").satisfiedBy(personNull));
+		assertFalse("null >= A expected to be true", greaterThanOrEquals(Person.name(), "A").satisfiedBy(null));
+		
+		// Negative: null value
+		try {
+			greaterThanOrEquals(Person.name(), null);
+			fail("greaterThanOrEquals(person.name, null): Exception was expected");
+		} catch (Exception e) {
+			// OK
+		}
+		
+		// Negative: null value provider
+		try {
+			ElementValueProvider<Person, String> valueProvider = null;
+			greaterThanOrEquals(valueProvider, "A");
+			fail("greaterThanOrEquals(null, A): Exception was expected");
+		} catch (Exception e) {
+			// OK
+		}
 	}
 
 	@Test
 	public void testBetweenEE() {
-		// TODO Implement testBetweenEE()
-		fail("Not yet implemented");
+		assertTrue("2 between 1 to 3 expected to be true", between(1, 3).satisfiedBy(2));
+		assertFalse("2 between 3 to 1 expected to be false", between(3, 1).satisfiedBy(2));
+		assertTrue("2 between 2 to 2 expected to be true", between(2, 2).satisfiedBy(2));
+		assertFalse("null between 1 to 3 expected to be false", between(1, 3).satisfiedBy(null));
+		
+		// Negative: null end value
+		try {
+			between(1, null);
+			fail("between(1,null): Exception was expected");
+		} catch (Exception e) {
+			// OK
+		}
+		
+		// Negative: null start value
+		try {
+			between(null, 1);
+			fail("between(null,1): Exception was expected");
+		} catch (Exception e) {
+			// OK
+		}
 	}
 
 	@Test
 	public void testBetweenElementValueProviderOfEVVV() {
-		// TODO Implement testBetweenElementValueProviderOfEVVV()
-		fail("Not yet implemented");
+		Person personB = new Person("B", 0, 0);
+		Person personNull = new Person(null, 0, 0);
+		assertTrue("personB between A to C expected to be true", between(Person.name(), "A", "C").satisfiedBy(personB));
+		assertFalse("personB between C to A expected to be false", between(Person.name(), "C", "A").satisfiedBy(personB));
+		assertTrue("personB between B to B expected to be true", between(Person.name(), "B", "B").satisfiedBy(personB));
+		assertFalse("personNull between A to B expected to be false", between(Person.name(), "A", "C").satisfiedBy(personNull));
+		assertFalse("null between A to B expected to be false", between(Person.name(), "A", "C").satisfiedBy(null));
+		
+		// Negative: null value provider
+		try {
+			ElementValueProvider<Person, String> valueProvider = null;
+			between(valueProvider, "A", "C");
+			fail("between(null,A,C): Exception was expected");
+		} catch (Exception e) {
+			// OK
+		}
+		
+		// Negative: null start value
+		try {
+			between(Person.name(), null, "C");
+			fail("between(person.name,null,C): Exception was expected");
+		} catch (Exception e) {
+			// OK
+		}
+		
+		// Negative: null end value
+		try {
+			between(Person.name(), "A", null);
+			fail("between(person.name,A,null): Exception was expected");
+		} catch (Exception e) {
+			// OK
+		}
 	}
 
 	@Test
@@ -418,7 +598,7 @@ public class PredicatesTest {
 		collection = null;
 		try {
 			in(collection);
-			fail("An exception was expected");
+			fail("in(null collection): An exception was expected");
 		} catch (Exception e) {
 			// OK
 		}
@@ -426,71 +606,102 @@ public class PredicatesTest {
 
 	@Test
 	public void testInE() {
-		// TODO Implement testInE()
-		fail("Not yet implemented");
+		assertTrue("A in (A) expected to be true", in("A").satisfiedBy("A"));
+		assertFalse("B in (A) expected to be false", in("A").satisfiedBy("B"));
+		assertFalse("null in (A) expected to be false", in("A").satisfiedBy(null));
+		assertFalse("A in (null) expected to be false", in((String)null).satisfiedBy("A"));
+		assertTrue("null in (null) expected to be true", in((String)null).satisfiedBy(null));
 	}
 
 	@Test
 	public void testInEE() {
-		// TODO Implement testInEE()
-		fail("Not yet implemented");
+		assertTrue("A in (A,B) expected to be true", in("A","B").satisfiedBy("A"));
+		assertTrue("B in (A,B) expected to be true", in("A","B").satisfiedBy("B"));
+		assertFalse("C in (A,B) expected to be false", in("A","B").satisfiedBy("C"));
+		assertFalse("null in (A,B) expected to be false", in("A","B").satisfiedBy(null));
+		assertFalse("A in (null,B) expected to be false", in((String)null, "B").satisfiedBy("A"));
+		assertTrue("A in (null,A) expected to be true", in((String)null, "A").satisfiedBy("A"));
+		assertTrue("null in (null,B) expected to be true", in((String)null, "B").satisfiedBy(null));
 	}
 
 	@Test
 	public void testInEEE() {
-		// TODO Implement testInEEE()
-		fail("Not yet implemented");
+		assertTrue("A in (A,B,C) expected to be true", in("A","B","C").satisfiedBy("A"));
+		assertTrue("B in (A,B,C) expected to be true", in("A","B","C").satisfiedBy("B"));
+		assertTrue("C in (A,B,C) expected to be true", in("A","B","C").satisfiedBy("C"));
+		assertFalse("C in (A,B,C) expected to be false", in("A","B","C").satisfiedBy("D"));
+		assertFalse("null in (A,B,C) expected to be false", in("A","B","C").satisfiedBy(null));
+		assertFalse("A in (null,B,C) expected to be false", in((String)null,"B","C").satisfiedBy("A"));
+		assertTrue("A in (null,A,B) expected to be true", in((String)null,"A","B").satisfiedBy("A"));
+		assertTrue("null in (null,B,C) expected to be true", in((String)null,"B","C").satisfiedBy(null));
 	}
 
 	@Test
 	public void testInEEEE() {
-		// TODO Implement testInEEEE()
-		fail("Not yet implemented");
+		assertTrue("A in (A,B,C,D) expected to be true", in("A","B","C","D").satisfiedBy("A"));
+		assertTrue("B in (A,B,C,D) expected to be true", in("A","B","C","D").satisfiedBy("B"));
+		assertTrue("C in (A,B,C,D) expected to be true", in("A","B","C","D").satisfiedBy("C"));
+		assertTrue("D in (A,B,C,D) expected to be true", in("A","B","C","D").satisfiedBy("D"));
+		assertFalse("E in (A,B,C,D) expected to be false", in("A","B","C","D").satisfiedBy("E"));
+		assertFalse("null in (A,B,C,D) expected to be false", in("A","B","C","D").satisfiedBy(null));
+		assertFalse("A in (null,B,C,D) expected to be false", in((String)null,"B","C","D").satisfiedBy("A"));
+		assertTrue("A in (null,A,B,C) expected to be true", in((String)null,"A","B","C").satisfiedBy("A"));
+		assertTrue("null in (null,B,C,D) expected to be true", in((String)null,"B","C","D").satisfiedBy(null));
 	}
 
 	@Test
 	public void testInEEEEEArray() {
-		// TODO Implement testInEEEEEArray()
-		fail("Not yet implemented");
+		assertTrue("A in (A,B,C,D,E,F,G) expected to be true", in("A","B","C","D","E","F","G").satisfiedBy("A"));
+		assertTrue("B in (A,B,C,D,E,F,G) expected to be true", in("A","B","C","D","E","F","G").satisfiedBy("B"));
+		assertTrue("C in (A,B,C,D,E,F,G) expected to be true", in("A","B","C","D","E","F","G").satisfiedBy("C"));
+		assertTrue("D in (A,B,C,D,E,F,G) expected to be true", in("A","B","C","D","E","F","G").satisfiedBy("D"));
+		assertTrue("E in (A,B,C,D,E,F,G) expected to be true", in("A","B","C","D","E","F","G").satisfiedBy("E"));
+		assertTrue("F in (A,B,C,D,E,F,G) expected to be true", in("A","B","C","D","E","F","G").satisfiedBy("F"));
+		assertTrue("G in (A,B,C,D,E,F,G) expected to be true", in("A","B","C","D","E","F","G").satisfiedBy("G"));
+		assertFalse("H in (A,B,C,D,E,F,G) expected to be false", in("A","B","C","D","E","F","G").satisfiedBy("H"));
+		assertFalse("null in (A,B,C,D,E,F,G) expected to be false", in("A","B","C","D","E","F","G").satisfiedBy(null));
+		assertFalse("A in (null,B,C,D,E,F,G) expected to be false", in((String)null,"B","C","D","E","F","G").satisfiedBy("A"));
+		assertTrue("A in (null,A,B,C,D,E,F,G) expected to be true", in((String)null,"A","B","C","D","E","F","G").satisfiedBy("A"));
+		assertTrue("null in (null,B,C,D,E,F,G) expected to be true", in((String)null,"B","C","D","E","F","G").satisfiedBy(null));
 	}
 
 	@Test
 	public void testInElementValueProviderOfEVCollectionOfV() {
 		Collection<String> collection;
-		PersonMock personA = new PersonMock("A", 1, 1.1);
-		PersonMock personB = new PersonMock("B", 1, 1.1);
-		PersonMock personC = new PersonMock("C", 1, 1.1);
-		PersonMock personD = new PersonMock("D", 1, 1.1);
-		PersonMock personE = new PersonMock("E", 1, 1.1);
-		PersonMock personEmpty = new PersonMock("", 1, 1.1);
-		PersonMock personNull = new PersonMock(null, 1, 1.1);
+		Person personA = new Person("A", 1, 1.1);
+		Person personB = new Person("B", 1, 1.1);
+		Person personC = new Person("C", 1, 1.1);
+		Person personD = new Person("D", 1, 1.1);
+		Person personE = new Person("E", 1, 1.1);
+		Person personEmpty = new Person("", 1, 1.1);
+		Person personNull = new Person(null, 1, 1.1);
 		
 		collection = Arrays.asList("A", "B", "C", "D");
-		assertTrue(in(PersonMock.name(), collection).satisfiedBy(personA));
-		assertTrue(in(PersonMock.name(), collection).satisfiedBy(personB));
-		assertTrue(in(PersonMock.name(), collection).satisfiedBy(personC));
-		assertTrue(in(PersonMock.name(), collection).satisfiedBy(personD));
-		assertFalse(in(PersonMock.name(), collection).satisfiedBy(personE));
-		assertFalse(in(PersonMock.name(), collection).satisfiedBy(personEmpty));
-		assertFalse(in(PersonMock.name(), collection).satisfiedBy(personNull));
+		assertTrue(in(Person.name(), collection).satisfiedBy(personA));
+		assertTrue(in(Person.name(), collection).satisfiedBy(personB));
+		assertTrue(in(Person.name(), collection).satisfiedBy(personC));
+		assertTrue(in(Person.name(), collection).satisfiedBy(personD));
+		assertFalse(in(Person.name(), collection).satisfiedBy(personE));
+		assertFalse(in(Person.name(), collection).satisfiedBy(personEmpty));
+		assertFalse(in(Person.name(), collection).satisfiedBy(personNull));
 		
 		collection = Arrays.asList(null, "A", "", "B", null, "C", "D", null);
-		assertTrue(in(PersonMock.name(), collection).satisfiedBy(personA));
-		assertTrue(in(PersonMock.name(), collection).satisfiedBy(personB));
-		assertTrue(in(PersonMock.name(), collection).satisfiedBy(personC));
-		assertTrue(in(PersonMock.name(), collection).satisfiedBy(personD));
-		assertFalse(in(PersonMock.name(), collection).satisfiedBy(personE));
-		assertTrue(in(PersonMock.name(), collection).satisfiedBy(personEmpty));
-		assertTrue(in(PersonMock.name(), collection).satisfiedBy(personNull));
+		assertTrue(in(Person.name(), collection).satisfiedBy(personA));
+		assertTrue(in(Person.name(), collection).satisfiedBy(personB));
+		assertTrue(in(Person.name(), collection).satisfiedBy(personC));
+		assertTrue(in(Person.name(), collection).satisfiedBy(personD));
+		assertFalse(in(Person.name(), collection).satisfiedBy(personE));
+		assertTrue(in(Person.name(), collection).satisfiedBy(personEmpty));
+		assertTrue(in(Person.name(), collection).satisfiedBy(personNull));
 		
 		collection = Arrays.asList();
-		assertFalse(in(PersonMock.name(), collection).satisfiedBy(personE));
-		assertFalse(in(PersonMock.name(), collection).satisfiedBy(personEmpty));
-		assertFalse(in(PersonMock.name(), collection).satisfiedBy(personNull));
+		assertFalse(in(Person.name(), collection).satisfiedBy(personE));
+		assertFalse(in(Person.name(), collection).satisfiedBy(personEmpty));
+		assertFalse(in(Person.name(), collection).satisfiedBy(personNull));
 
 		collection = null;
 		try {
-			in(PersonMock.name(), collection);
+			in(Person.name(), collection);
 			fail("An exception was expected");
 		} catch (Exception e) {
 			// OK

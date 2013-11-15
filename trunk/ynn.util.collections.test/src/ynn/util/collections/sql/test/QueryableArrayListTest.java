@@ -29,7 +29,7 @@ import java.util.List;
 import org.junit.Test;
 
 import ynn.util.collections.sql.QueryableCollection;
-import ynn.util.collections.sql.test.mock.PersonMock;
+import ynn.util.collections.sql.test.mock.Person;
 
 public class QueryableArrayListTest {
 	
@@ -265,25 +265,25 @@ public class QueryableArrayListTest {
 
 	@Test
 	public void testWherePersonMockAttributes() {
-		List<PersonMock> original = Arrays.asList(
-				new PersonMock("name1", 1, 1.1),
-				new PersonMock("name2", 2, 2.2),
-				new PersonMock( null, 	-1, -1),
-				new PersonMock("name3", 3, 3.3),
-				new PersonMock("", 	 0, 0),
-				new PersonMock("name4", 4, 4.4)
+		List<Person> original = Arrays.asList(
+				new Person("name1", 1, 1.1),
+				new Person("name2", 2, 2.2),
+				new Person( null, 	-1, -1),
+				new Person("name3", 3, 3.3),
+				new Person("", 	 0, 0),
+				new Person("name4", 4, 4.4)
 				);
-		List<PersonMock> expected = Arrays.asList(
-				new PersonMock("name1", 1, 1.1),
-				new PersonMock("name3", 3, 3.3),
-				new PersonMock("name4", 4, 4.4)
+		List<Person> expected = Arrays.asList(
+				new Person("name1", 1, 1.1),
+				new Person("name3", 3, 3.3),
+				new Person("name4", 4, 4.4)
 				);
-		Collection<PersonMock> result = 
+		Collection<Person> result = 
 				selectFrom(original)
 				.where(
 						and(
-							not(isNull(PersonMock.name())),
-							not(in(PersonMock.age(), Arrays.asList(0, 2)))
+							not(isNull(Person.name())),
+							not(in(Person.age(), Arrays.asList(0, 2)))
 						)
 					);
 		assertArrayEquals("Result list is not as expected", expected.toArray(), result.toArray());
@@ -291,26 +291,26 @@ public class QueryableArrayListTest {
 
 	@Test
 	public void testWherePersonMockStringAttributes() {
-		List<PersonMock> original = Arrays.asList(
-				new PersonMock("name1", 1, 1.1),
-				new PersonMock("name2", 2, 2.2),
-				new PersonMock( null, 	-1, -1),
-				new PersonMock("name3", 3, 3.3),
-				new PersonMock("", 	 0, 0),
-				new PersonMock("name4", 4, 4.4)
+		List<Person> original = Arrays.asList(
+				new Person("name1", 1, 1.1),
+				new Person("name2", 2, 2.2),
+				new Person( null, 	-1, -1),
+				new Person("name3", 3, 3.3),
+				new Person("", 	 0, 0),
+				new Person("name4", 4, 4.4)
 				);
-		List<PersonMock> expected = Arrays.asList(
-				new PersonMock("name2", 2, 2.2),
-				new PersonMock( null, 	-1, -1),
-				new PersonMock("", 	 0, 0)
+		List<Person> expected = Arrays.asList(
+				new Person("name2", 2, 2.2),
+				new Person( null, 	-1, -1),
+				new Person("", 	 0, 0)
 				);
-		Collection<PersonMock> result = 
+		Collection<Person> result = 
 				selectFrom(original)
 				.where(
 						or(
-							isNull(PersonMock.name()),
-							stringEndsWith(PersonMock.name(), "2"),
-							lessThanOrEquals(PersonMock.age(), 0)
+							isNull(Person.name()),
+							stringEndsWith(Person.name(), "2"),
+							lessThanOrEquals(Person.age(), 0)
 						)
 					);
 		assertArrayEquals("Result list is not as expected", expected.toArray(), result.toArray());
@@ -318,54 +318,54 @@ public class QueryableArrayListTest {
 
 	@Test
 	public void testWherePersonMockNameNotNullOrEmptyOrderByName() {
-		List<PersonMock> original = Arrays.asList(
-				new PersonMock("name2", 2, 2.2),
-				new PersonMock("name1", 1, 1.1),
-				new PersonMock( null, 	-1, -1),
-				new PersonMock("name4", 4, 4.4),
-				new PersonMock("", 	 0, 0),
-				new PersonMock("name3", 3, 3.3)
+		List<Person> original = Arrays.asList(
+				new Person("name2", 2, 2.2),
+				new Person("name1", 1, 1.1),
+				new Person( null, 	-1, -1),
+				new Person("name4", 4, 4.4),
+				new Person("", 	 0, 0),
+				new Person("name3", 3, 3.3)
 				);
-		List<PersonMock> expected = Arrays.asList(
-				new PersonMock("name1", 1, 1.1),
-				new PersonMock("name2", 2, 2.2),
-				new PersonMock("name3", 3, 3.3),
-				new PersonMock("name4", 4, 4.4)
+		List<Person> expected = Arrays.asList(
+				new Person("name1", 1, 1.1),
+				new Person("name2", 2, 2.2),
+				new Person("name3", 3, 3.3),
+				new Person("name4", 4, 4.4)
 				);
-		Collection<PersonMock> result = 
+		Collection<Person> result = 
 				selectFrom(original)
 				.where(
 						and(
-							not(isNull(PersonMock.name())),
-							not(emptyString(PersonMock.name()))
+							not(isNull(Person.name())),
+							not(emptyString(Person.name()))
 						)
 					)
-				.orderBy(PersonMock.name());
+				.orderBy(Person.name());
 		assertArrayEquals("Result list is not as expected", expected.toArray(), result.toArray());
 	}
 
 	@Test
 	public void testPersonMockOrderByAgeDescNameAsc() {
-		List<PersonMock> original = Arrays.asList(
-				new PersonMock("name2", 2, 2.2),
-				new PersonMock("name1", 1, 1.1),
-				new PersonMock("name4", 4, 4.4),
-				new PersonMock("name3", 1, 3.3),
-				new PersonMock("name5", 2, 5.5),
-				new PersonMock("name6", 3, 6.6)
+		List<Person> original = Arrays.asList(
+				new Person("name2", 2, 2.2),
+				new Person("name1", 1, 1.1),
+				new Person("name4", 4, 4.4),
+				new Person("name3", 1, 3.3),
+				new Person("name5", 2, 5.5),
+				new Person("name6", 3, 6.6)
 				);
-		List<PersonMock> expected = Arrays.asList(
-				new PersonMock("name4", 4, 4.4),
-				new PersonMock("name6", 3, 6.6),
-				new PersonMock("name2", 2, 2.2),
-				new PersonMock("name5", 2, 5.5),
-				new PersonMock("name1", 1, 1.1),
-				new PersonMock("name3", 1, 3.3)
+		List<Person> expected = Arrays.asList(
+				new Person("name4", 4, 4.4),
+				new Person("name6", 3, 6.6),
+				new Person("name2", 2, 2.2),
+				new Person("name5", 2, 5.5),
+				new Person("name1", 1, 1.1),
+				new Person("name3", 1, 3.3)
 				);
-		Collection<PersonMock> result = 
+		Collection<Person> result = 
 				selectFrom(original)
-				.orderBy(desc(PersonMock.age()), 
-						 asc(PersonMock.name()));
+				.orderBy(desc(Person.age()), 
+						 asc(Person.name()));
 		assertArrayEquals("Result list is not as expected", expected.toArray(), result.toArray());
 	}
 	
